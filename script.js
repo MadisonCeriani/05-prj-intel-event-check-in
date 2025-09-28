@@ -2,10 +2,24 @@ const form = document.getElementById("checkInForm");
 const nameInput = document.getElementById("attendeeName");
 const teamSelect = document.getElementById("teamSelect");
 
-// Track attendance
-let count = 0;
+// Load counts from local storage or start from zero
+let count = parseInt(localStorage.getItem("attendanceCount")) || 0;
 const maxCount = 50;
 
+let waterCount = parseInt(localStorage.getItem("waterCount")) || 0;
+let zeroCount = parseInt(localStorage.getItem("zeroCount")) || 0;
+let powerCount = parseInt(localStorage.getItem("powerCount")) || 0;
+
+// Set initial UI values
+document.getElementById("attendeeCount").textContent = count;
+document.getElementById("waterCount").textContent = waterCount;
+document.getElementById("zeroCount").textContent = zeroCount;
+document.getElementById("powerCount").textContent = powerCount;
+const progressBar = document.getElementById("progressBar");
+const percentage = Math.round((count / maxCount) * 100);
+progressBar.style.width = `${percentage}%`;
+
+// Track attendance
 form.addEventListener("submit", function (event) {
   event.preventDefault();
   // You can run your custom code here when someone checks in
@@ -18,7 +32,7 @@ form.addEventListener("submit", function (event) {
 
   // Increment count
   count++;
-  console.log("Total check-ins:", count);
+  localStorage.setItem("attendanceCount", count);
 
   // Update attendee count display
   const attendeeCount = document.getElementById("attendeeCount");
@@ -26,14 +40,26 @@ form.addEventListener("submit", function (event) {
 
   // Update progress bar
   const percentage = Math.round((count / maxCount) * 100);
-  const progressBar = document.getElementById("progressBar");
   progressBar.style.width = `${percentage}%`;
 
-  console.log(`Progress: ${percentage}%`);
-
-  // Update team counter
-  const teamCounter = document.getElementById(team + "Count");
-  teamCounter.textContent = parseInt(teamCounter.textContent) + 1;
+  // Update team counter and local storage
+  let teamCounter;
+  if (team === "water") {
+    waterCount++;
+    localStorage.setItem("waterCount", waterCount);
+    teamCounter = document.getElementById("waterCount");
+    teamCounter.textContent = waterCount;
+  } else if (team === "zero") {
+    zeroCount++;
+    localStorage.setItem("zeroCount", zeroCount);
+    teamCounter = document.getElementById("zeroCount");
+    teamCounter.textContent = zeroCount;
+  } else if (team === "power") {
+    powerCount++;
+    localStorage.setItem("powerCount", powerCount);
+    teamCounter = document.getElementById("powerCount");
+    teamCounter.textContent = powerCount;
+  }
 
   // Show Welcome message
   const message = `🎉 Welcome, ${name} from ${teamName}!`;
