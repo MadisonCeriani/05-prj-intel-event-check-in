@@ -43,5 +43,36 @@ form.addEventListener("submit", function (event) {
   const greeting = document.getElementById("greeting");
   greeting.textContent = message;
 
+  // Celebrate when max count is reached
+  if (count === maxCount) {
+    // Find the winning team
+    const waterCount = parseInt(
+      document.getElementById("waterCount").textContent
+    );
+    const zeroCount = parseInt(
+      document.getElementById("zeroCount").textContent
+    );
+    const powerCount = parseInt(
+      document.getElementById("powerCount").textContent
+    );
+
+    let winningTeam = "Team Water Wise";
+    let maxTeamCount = waterCount;
+
+    if (zeroCount > maxTeamCount) {
+      winningTeam = "Team Net Zero";
+      maxTeamCount = zeroCount;
+    }
+    if (powerCount > maxTeamCount) {
+      winningTeam = "Team Renewables";
+      maxTeamCount = powerCount;
+    }
+
+    const celebrationMessage = document.getElementById("celebrationMessage");
+    celebrationMessage.textContent = `🎊 Attendance goal reached! The winning team is ${winningTeam}!`;
+
+    alert("🎉 50 attendees have checked in!");
+  }
+
   form.reset();
 });
